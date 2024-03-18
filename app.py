@@ -46,4 +46,4 @@ def inject_oir():
 
 
 if __name__ == '__main__':
-    app.run(port=5002)
+    app.run(port=5050)

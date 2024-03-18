@@ -1,11 +1,11 @@
 import requests
 
-from env import AUTH_URL
+from env import AUTH_URL, DSS_HOST
 
 
 class ConflictManager:
 
-    dss_host = "http://localhost:8082"
+    dss_host = DSS_HOST
 
     def __init__(self) -> None:
         self.auth()
