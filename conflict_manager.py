@@ -1,5 +1,7 @@
 import requests
 
+from env import AUTH_URL
+
 
 class ConflictManager:
 
@@ -9,7 +11,7 @@ class ConflictManager:
         self.auth()
 
     def auth(self):
-        url = "http://localhost:8085/token?grant_type=client_credentials&intended_audience=localhost&issuer=localhost&scope={0}"
+        url = AUTH_URL + "/token?grant_type=client_credentials&intended_audience=localhost&issuer=localhost&scope={0}"
         self.constraint_management = requests.get(url.format("utm.constraint_management")).json()["access_token"]
 
     def check_restrictions(self, volume):
