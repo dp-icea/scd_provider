@@ -10,7 +10,7 @@ class Scd:
         self.auth()
 
     def auth(self):
-        url = "http://kong.icea.decea.mil.br:64235/token?grant_type=client_credentials&intended_audience=localhost&issuer=localhost&scope={0}"
+        url = "http://kong.icea.decea.mil.br:64235/token?grant_type=client_credentials&intended_audience=localhost&sub=icea&issuer=localhost&scope={0}"
         self.strategic_coordination = requests.get(url.format("utm.strategic_coordination")).json()["access_token"]
 
     def check_strategic_conflicts(self, volume):
