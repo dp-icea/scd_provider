@@ -14,6 +14,7 @@ class Scd:
         self.strategic_coordination = requests.get(url.format("utm.strategic_coordination")).json()["access_token"]
 
     def check_strategic_conflicts(self, volume):
+        self.auth()
         url = DSS_HOST + "/dss/v1/operational_intent_references/query"
         body = {
             "area_of_interest": volume
@@ -27,6 +28,7 @@ class Scd:
             print("Sem intenções para o volume")
         
     def put_operational_intent(self, volume):
+        self.auth()
         id = str(uuid.uuid4())
         url = DSS_HOST + f"/dss/v1/operational_intent_references/{id}"
 

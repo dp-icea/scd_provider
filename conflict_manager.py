@@ -15,6 +15,7 @@ class ConflictManager:
         self.constraint_management = requests.get(url.format("utm.constraint_management")).json()["access_token"]
 
     def check_restrictions(self, volume):
+        self.auth()
         url = self.dss_host + "/dss/v1/constraint_references/query"
         body = {
             "area_of_interest": volume

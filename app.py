@@ -13,7 +13,6 @@ dss = Dss()
 
 @app.route('/uss/v1/operational_intents/<operational_intent_id>', methods=['GET'])
 def get_oir(operational_intent_id):
-    print(database)
     if operational_intent_id not in database:
         return {"msg": 'No such OIR'}, 404
 
