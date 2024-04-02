@@ -44,5 +44,10 @@ def inject_oir():
     return {"Success": True}, 201
 
 
+@app.route('/uss/v1/operational_intents', methods=['POST'])
+def post_oir():
+    return '', 204
+
+
 if __name__ == '__main__':
     app.run(port=5050, host="0.0.0.0")
