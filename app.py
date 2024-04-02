@@ -46,6 +46,8 @@ def inject_oir():
 
 @app.route('/uss/v1/operational_intents', methods=['POST'])
 def post_oir():
+    data = request.get_json()
+    print(data)
     return '', 204
 
 
