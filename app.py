@@ -11,16 +11,16 @@ database = {}
 dss = Dss()
 
 
-@app.route('/uss/v1/operational_intents/<operational_intent_id>', methods=['GET'])
+@app.route("/uss/v1/operational_intents/<operational_intent_id>", methods=["GET"])
 def get_oir(operational_intent_id):
     print(database)
     if operational_intent_id not in database:
-        return {"msg": 'No such OIR'}, 404
+        return {"msg": "No such OIR"}, 404
 
     return json.dumps(database[operational_intent_id], default=lambda o: o.__dict__)
 
 
-@app.route('/injection/oir', methods=['PUT'])
+@app.route("/injection/oir", methods=["PUT"])
 def inject_oir():
     volume = request.get_json()
     try:
@@ -32,11 +32,10 @@ def inject_oir():
         oir["operational_intent"]["details"] = {
             "volumes": [],
             "off_nominal_volumes": [],
-            "priority": 0
+            "priority": 0,
         }
         oir["operational_intent"]["details"]["volumes"].append(volume)
-        database[oir["operational_intent"]["reference"]['id']] = oir
-
+        database[oir["operational_intent"]["reference"]["id"]] = oir
 
     except Exception as ex:
         print(f"Erro na criação: {ex}")
@@ -45,5 +44,5 @@ def inject_oir():
     return {"Success": True}, 201
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     app.run(port=5050)
