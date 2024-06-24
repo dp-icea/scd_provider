@@ -30,7 +30,7 @@ func (h HttpServer) Serve() {
 			return
 		}
 
-		response, err := scd.Deconflictor{}.Injection(request)
+		response, err := scd.Deconflictor{}.Injection(request) //TODO Fix deconfliction creation
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusBadRequest)
 			return
@@ -54,7 +54,20 @@ func (h HttpServer) Serve() {
 			http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
 			return
 		}
-		//TODO Return OIR
+		id := r.PathValue("entityid")
+		response, err := scd.Deconflictor{}.GetOir(id) //TODO Fix deconfliction creation
+		if err != nil {
+			log.Print(err.Error())
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		err = json.NewEncoder(w).Encode(response)
+		if err != nil {
+			log.Print(err.Error())
+			http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+			return
+		}
 	})
 
 	http.HandleFunc("/uss/v1/operational_intents/", func(w http.ResponseWriter, r *http.Request) {
