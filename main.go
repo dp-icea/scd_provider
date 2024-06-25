@@ -2,6 +2,7 @@ package main
 
 import (
 	"icea_uss/httpServer"
+	"icea_uss/scd"
 )
 
 type Server interface {
@@ -9,6 +10,8 @@ type Server interface {
 }
 
 func main() {
-	var server Server = httpServer.HttpServer{}
+	var server Server = httpServer.HttpServer{
+		Deconflictor: scd.InterussDeconflictor{},
+	}
 	server.Serve()
 }

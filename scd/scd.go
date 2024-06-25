@@ -5,10 +5,15 @@ import (
 	"icea_uss/store"
 )
 
-type Deconflictor struct {
+type StrategicDeconfliction interface {
+	Inject(request dss.PutOirRequest) (dss.OperationalIntent, error)
+	FetchOir(id string) (dss.OperationalIntent, error)
 }
 
-func (d Deconflictor) Injection(request dss.PutOirRequest) (dss.OperationalIntent, error) {
+type InterussDeconflictor struct {
+}
+
+func (d InterussDeconflictor) Inject(request dss.PutOirRequest) (dss.OperationalIntent, error) {
 	dssHandler := dss.Dss{}
 	operationalIntent, err := dssHandler.PutOperationalIntent(request)
 	if err != nil {
@@ -23,7 +28,7 @@ func (d Deconflictor) Injection(request dss.PutOirRequest) (dss.OperationalInten
 	return operationalIntent, nil
 }
 
-func (d Deconflictor) GetOir(id string) (dss.OperationalIntent, error) {
+func (d InterussDeconflictor) FetchOir(id string) (dss.OperationalIntent, error) {
 	oir, err := store.GetOir(id)
 	if err != nil {
 		return dss.OperationalIntent{}, err

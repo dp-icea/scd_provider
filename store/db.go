@@ -2,6 +2,7 @@ package store
 
 import (
 	"context"
+	"icea_uss/config"
 	"log"
 
 	"go.mongodb.org/mongo-driver/mongo"
@@ -9,7 +10,8 @@ import (
 )
 
 func db() *mongo.Client {
-	clientOptions := options.Client().ApplyURI("mongodb://admin:admin@localhost:27017") //TODO Fix URL to use .env
+	conf := config.GetGlobalConfig()
+	clientOptions := options.Client().ApplyURI("mongodb://" + conf.MongoUser + ":" + conf.MongoPassword + "@" + conf.MongoUrl)
 
 	client, err := mongo.Connect(context.TODO(), clientOptions)
 

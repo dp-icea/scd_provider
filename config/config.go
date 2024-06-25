@@ -10,18 +10,26 @@ import (
 var lock = &sync.Mutex{}
 
 type Config struct {
-	HostUrl string
-	DssUrl  string
-	AuthUrl string
-	ApiKey  string
+	HostUrl       string
+	HostPort      string
+	DssUrl        string
+	AuthUrl       string
+	ApiKey        string
+	MongoUrl      string
+	MongoUser     string
+	MongoPassword string
 }
 
 func newInstance() *Config {
 	return &Config{
-		HostUrl: getEnv("HOST_URL", ""),
-		DssUrl:  getEnv("DSS_URL", ""),
-		AuthUrl: getEnv("AUTH_URL", ""),
-		ApiKey:  getEnv("API_KEY", "brutm"),
+		HostUrl:       getEnv("SERVER_BASE_URL", "http://localhost"),
+		HostPort:      getEnv("SERVER_PORT", "9091"),
+		DssUrl:        getEnv("DSS_URL", ""),
+		AuthUrl:       getEnv("AUTH_URL", ""),
+		ApiKey:        getEnv("API_KEY", "brutm"),
+		MongoUrl:      getEnv("MONGO_URL", ""),
+		MongoUser:     getEnv("MONGO_USER", ""),
+		MongoPassword: getEnv("MONGO_PASSWORD", ""),
 	}
 }
 
