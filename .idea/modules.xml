@@ -2,7 +2,7 @@
 <project version="4">
   <component name="ProjectModuleManager">
     <modules>
-      <module fileurl="file://$PROJECT_DIR$/.idea/icea_uss.iml" filepath="$PROJECT_DIR$/.idea/icea_uss.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/scd_provider.iml" filepath="$PROJECT_DIR$/.idea/scd_provider.iml" />
     </modules>
   </component>
 </project>

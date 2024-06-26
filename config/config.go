@@ -18,6 +18,7 @@ type Config struct {
 	MongoUrl      string
 	MongoUser     string
 	MongoPassword string
+	TokenUrl      string
 }
 
 func newInstance() *Config {
@@ -30,6 +31,7 @@ func newInstance() *Config {
 		MongoUrl:      getEnv("MONGO_URL", ""),
 		MongoUser:     getEnv("MONGO_USER", ""),
 		MongoPassword: getEnv("MONGO_PASSWORD", ""),
+		TokenUrl:      getEnv("TOKEN_VERIFIER_URL", ""),
 	}
 }
 
