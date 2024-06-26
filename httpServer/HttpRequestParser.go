@@ -27,3 +27,7 @@ func (p HttpRequestParser) ParseInjection(r *http.Request) (dss.PutOirRequest, e
 	return request, nil
 
 }
+
+func (p HttpRequestParser) ParseFetchOirResponse(intent dss.OperationalIntent) dss.GetOperationalIntentDetailsResponse {
+	return dss.GetOperationalIntentDetailsResponse{OperationalIntent: intent}
+}

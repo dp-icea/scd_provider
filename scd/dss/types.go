@@ -466,3 +466,7 @@ type ErrorReport struct {
 	// The request (by this USS) and response associated with the error.
 	Exchange ExchangeRecord `json:"exchange"`
 }
+
+type GetOperationalIntentDetailsResponse struct {
+	OperationalIntent OperationalIntent `json:"operational_intent"`
+}

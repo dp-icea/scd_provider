@@ -33,6 +33,5 @@ func (d InterussDeconflictor) FetchOir(id string) (dss.OperationalIntent, error)
 	if err != nil {
 		return dss.OperationalIntent{}, err
 	}
-
 	return oir, err
 }

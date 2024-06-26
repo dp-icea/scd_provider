@@ -6,6 +6,7 @@ import (
 	"net/http"
 	"scd_provider/config"
 	"scd_provider/scd"
+	"scd_provider/scd/dss"
 	"strings"
 )
 
@@ -18,6 +19,8 @@ type HttpServer struct {
 type RequestParser interface {
 	ParseInjection(r *http.Request) error
 	ParseNotification(r *http.Request) error
+
+	ParseFetchOirResponse(intent dss.OperationalIntent) dss.GetOperationalIntentDetailsResponse
 }
 
 func (h HttpServer) Serve() {
@@ -67,6 +70,7 @@ func (h HttpServer) handleInjection(w http.ResponseWriter, r *http.Request) {
 
 func (h HttpServer) handleFetchOir(w http.ResponseWriter, r *http.Request) {
 	log.Println(*r)
+	parser := HttpRequestParser{}
 
 	if r.Method != http.MethodGet {
 		log.Print("Invalid request method: " + r.Method)
@@ -87,12 +91,14 @@ func (h HttpServer) handleFetchOir(w http.ResponseWriter, r *http.Request) {
 	}
 
 	id := r.PathValue("entityid")
-	response, err := h.Deconflictor.FetchOir(id)
+	oir, err := h.Deconflictor.FetchOir(id)
 	if err != nil {
 		log.Print(err.Error())
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
+
+	response := parser.ParseFetchOirResponse(oir)
 
 	w.Header().Set("Content-Type", "application/json")
 	err = json.NewEncoder(w).Encode(response)
