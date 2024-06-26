@@ -1,5 +1,7 @@
 package dss
 
+import "errors"
+
 type Dss struct {
 	client Client
 }
@@ -36,7 +38,23 @@ func (dss Dss) PutOperationalIntent(request PutOirRequest) (OperationalIntent, e
 		FlightType: request.FlightType,
 	}
 
-	//TODO: Deconfliction with Constraints and other OIRs
+	queryConstraint, err := dss.client.QueryConstraints(parameters)
+	if err != nil {
+		return OperationalIntent{}, err
+	}
+	if len(queryConstraint.ConstraintReferences) > 0 {
+		//TODO: Request Constraint from other provider and check conflict
+		return OperationalIntent{}, errors.New("oir conflicts with constraint")
+	}
+
+	queryOperationalIntent, err := dss.client.QueryOperationalIntent(parameters)
+	if err != nil {
+		return OperationalIntent{}, err
+	}
+	if len(queryOperationalIntent.OperationalIntentReferences) > 0 {
+		//TODO: Request OIR from other provider and check conflict
+		return OperationalIntent{}, errors.New("oir conflicts with another")
+	}
 
 	putResponse, err := dss.client.PutOperationalIntent(parameters)
 	if err != nil {
