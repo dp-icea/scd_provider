@@ -1,8 +1,8 @@
 package scd
 
 import (
-	"icea_uss/scd/dss"
-	"icea_uss/store"
+	"scd_provider/scd/dss"
+	"scd_provider/store"
 )
 
 type StrategicDeconfliction interface {

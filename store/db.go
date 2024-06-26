@@ -2,8 +2,8 @@ package store
 
 import (
 	"context"
-	"icea_uss/config"
 	"log"
+	"scd_provider/config"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"

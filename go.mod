@@ -1,4 +1,4 @@
-module icea_uss
+module scd_provider
 
 go 1.22
 

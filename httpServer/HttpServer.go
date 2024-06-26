@@ -2,10 +2,10 @@ package httpServer
 
 import (
 	"encoding/json"
-	"icea_uss/config"
-	"icea_uss/scd"
 	"log"
 	"net/http"
+	"scd_provider/config"
+	"scd_provider/scd"
 )
 
 type HttpServer struct {

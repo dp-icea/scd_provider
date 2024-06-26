@@ -6,10 +6,10 @@ import (
 	"errors"
 	"github.com/antonholmquist/jason"
 	"github.com/google/uuid"
-	"icea_uss/config"
 	"io"
 	"log"
 	"net/http"
+	"scd_provider/config"
 )
 
 type Client struct {

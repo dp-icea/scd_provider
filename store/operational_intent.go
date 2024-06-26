@@ -3,7 +3,7 @@ package store
 import (
 	"context"
 	"go.mongodb.org/mongo-driver/bson"
-	"icea_uss/scd/dss"
+	"scd_provider/scd/dss"
 )
 
 func CreateOir(oir dss.OperationalIntent) error {

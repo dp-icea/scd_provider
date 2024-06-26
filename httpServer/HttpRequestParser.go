@@ -2,9 +2,9 @@ package httpServer
 
 import (
 	"encoding/json"
-	"icea_uss/scd/dss"
 	"io"
 	"net/http"
+	"scd_provider/scd/dss"
 )
 
 type HttpRequestParser struct{}

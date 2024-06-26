@@ -1,8 +1,8 @@
 package main
 
 import (
-	"icea_uss/httpServer"
-	"icea_uss/scd"
+	"scd_provider/httpServer"
+	"scd_provider/scd"
 )
 
 type Server interface {
