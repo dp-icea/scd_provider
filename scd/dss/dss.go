@@ -1,7 +1,5 @@
 package dss
 
-import "errors"
-
 type Dss struct {
 	client Client
 }
@@ -42,18 +40,19 @@ func (dss Dss) PutOperationalIntent(request PutOirRequest) (OperationalIntent, e
 	if err != nil {
 		return OperationalIntent{}, err
 	}
-	if len(queryConstraint.ConstraintReferences) > 0 {
-		//TODO: Request Constraint from other provider and check conflict
-		return OperationalIntent{}, errors.New("oir conflicts with constraint")
+
+	err = dss.handleConstraintQuery(parameters, queryConstraint)
+	if err != nil {
+		return OperationalIntent{}, err
 	}
 
 	queryOperationalIntent, err := dss.client.QueryOperationalIntent(parameters)
 	if err != nil {
 		return OperationalIntent{}, err
 	}
-	if len(queryOperationalIntent.OperationalIntentReferences) > 0 {
-		//TODO: Request OIR from other provider and check conflict
-		return OperationalIntent{}, errors.New("oir conflicts with another")
+	err = dss.handleOirQuery(parameters, queryOperationalIntent)
+	if err != nil {
+		return OperationalIntent{}, err
 	}
 
 	putResponse, err := dss.client.PutOperationalIntent(parameters)
@@ -72,5 +71,36 @@ func (dss Dss) PutOperationalIntent(request PutOirRequest) (OperationalIntent, e
 		},
 	}
 	return operationalIntent, nil
+}
 
+func (dss Dss) handleConstraintQuery(param PutOperationalIntentReferenceParameters, query QueryConstraintReferencesResponse) error {
+	g := GeomHelper{}
+	for _, reference := range query.ConstraintReferences {
+		constraint, err := dss.client.GetConstraintDetails(reference)
+		if err != nil {
+			return err
+		}
+
+		err = g.Intersects(param.Extents, constraint.Constraint.Details.Volumes)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
+}
+
+func (dss Dss) handleOirQuery(param PutOperationalIntentReferenceParameters, query QueryOperationalIntentReferenceResponse) error {
+	g := GeomHelper{}
+	for _, reference := range query.OperationalIntentReferences {
+		oir, err := dss.client.GetOirDetails(reference)
+		if err != nil {
+			return err
+		}
+
+		err = g.Intersects(param.Extents, oir.OperationalIntent.Details.Volumes)
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }

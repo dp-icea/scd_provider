@@ -12,6 +12,10 @@ import (
 	"scd_provider/config"
 )
 
+const (
+	dssAudience string = "core-service"
+)
+
 type Client struct {
 }
 
@@ -57,7 +61,7 @@ func (c Client) PutOperationalIntent(param PutOperationalIntentReferenceParamete
 	conf := config.GetGlobalConfig()
 	id := uuid.New()
 
-	token, err := c.auth("utm.strategic_coordination", "localhost")
+	token, err := c.auth("utm.strategic_coordination", dssAudience)
 	if err != nil {
 		return response, err
 	}
@@ -102,7 +106,7 @@ func (c Client) QueryOperationalIntent(param PutOperationalIntentReferenceParame
 		OperationalIntentReferences: make([]OperationalIntentReference, 0),
 	}
 
-	token, err := c.auth("utm.strategic_coordination", "localhost")
+	token, err := c.auth("utm.strategic_coordination", dssAudience)
 	if err != nil {
 		return fullResponse, err
 	}
@@ -158,7 +162,7 @@ func (c Client) QueryConstraints(param PutOperationalIntentReferenceParameters) 
 		ConstraintReferences: make([]ConstraintReference, 0),
 	}
 
-	token, err := c.auth("utm.constraint_management", "localhost")
+	token, err := c.auth("utm.constraint_management", dssAudience)
 	if err != nil {
 		return fullResponse, err
 	}
@@ -206,4 +210,56 @@ func (c Client) QueryConstraints(param PutOperationalIntentReferenceParameters) 
 	}
 
 	return fullResponse, nil
+}
+
+func (c Client) GetConstraintDetails(reference ConstraintReference) (GetConstraintDetailsResponse, error) {
+	var response GetConstraintDetailsResponse
+
+	token, err := c.auth("utm.constraint_processing", reference.Manager)
+	if err != nil {
+		log.Println("Failed to get token")
+		return response, err
+	}
+
+	url := string(reference.UssBaseUrl) + "/uss/v1/constraints/" + string(reference.Id)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return response, err
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+
+	err = json.Unmarshal(respBody, &response)
+	return response, err
+}
+
+func (c Client) GetOirDetails(reference OperationalIntentReference) (GetOperationalIntentDetailsResponse, error) {
+	var response GetOperationalIntentDetailsResponse
+
+	token, err := c.auth("utm.strategic_coordination", reference.Manager)
+	if err != nil {
+		log.Println("Failed to get token")
+		return response, err
+	}
+
+	url := string(reference.UssBaseUrl) + "/uss/v1/operational_intents/" + string(reference.Id)
+	req, err := http.NewRequest(http.MethodGet, url, nil)
+	req.Header.Set("Authorization", "Bearer "+token)
+
+	client := &http.Client{}
+	resp, err := client.Do(req)
+	if err != nil {
+		return response, err
+	}
+	defer resp.Body.Close()
+
+	respBody, err := io.ReadAll(resp.Body)
+
+	err = json.Unmarshal(respBody, &response)
+	return response, err
 }

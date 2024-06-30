@@ -470,3 +470,17 @@ type ErrorReport struct {
 type GetOperationalIntentDetailsResponse struct {
 	OperationalIntent OperationalIntent `json:"operational_intent"`
 }
+
+type ConstraintDetails struct {
+	Volumes []Volume4D `json:"volumes"`
+	Type    string     `json:"type"`
+}
+
+type Constraint struct {
+	Reference ConstraintReference `json:"reference"`
+	Details   ConstraintDetails   `json:"details"`
+}
+
+type GetConstraintDetailsResponse struct {
+	Constraint Constraint `json:"constraint"`
+}
