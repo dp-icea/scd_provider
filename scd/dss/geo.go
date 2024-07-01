@@ -43,19 +43,19 @@ func volumeIntersect(a Volume4D, b Volume4D) error {
 }
 
 func timeIntersects(a Volume4D, b Volume4D) (bool, error) {
-	aStart, err := time.Parse(a.TimeStart.Format, a.TimeStart.Value)
+	aStart, err := time.Parse(time.RFC3339, a.TimeStart.Value)
 	if err != nil {
 		return false, err
 	}
-	aEnd, err := time.Parse(a.TimeEnd.Format, a.TimeEnd.Value)
+	aEnd, err := time.Parse(time.RFC3339, a.TimeEnd.Value)
 	if err != nil {
 		return false, err
 	}
-	bStart, err := time.Parse(b.TimeStart.Format, b.TimeStart.Value)
+	bStart, err := time.Parse(time.RFC3339, b.TimeStart.Value)
 	if err != nil {
 		return false, err
 	}
-	bEnd, err := time.Parse(b.TimeEnd.Format, b.TimeEnd.Value)
+	bEnd, err := time.Parse(time.RFC3339, b.TimeEnd.Value)
 	if err != nil {
 		return false, err
 	}
