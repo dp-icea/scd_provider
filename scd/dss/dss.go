@@ -1,5 +1,7 @@
 package dss
 
+import "scd_provider/config"
+
 type Dss struct {
 	client Client
 }
@@ -23,14 +25,15 @@ type OperationalIntent struct {
 
 func (dss Dss) PutOperationalIntent(request PutOirRequest) (OperationalIntent, error) {
 	notifyForConstraint := true
+	conf := config.GetGlobalConfig()
 	parameters := PutOperationalIntentReferenceParameters{
 		Extents:        request.Extents,
 		Key:            nil,
 		State:          "Accepted",
-		UssBaseUrl:     "http://localhost:9091",
+		UssBaseUrl:     OperationalIntentUssBaseURL(conf.HostUrl),
 		SubscriptionId: nil,
 		NewSubscription: &ImplicitSubscriptionParameters{
-			UssBaseUrl:           "http://localhost:9091",
+			UssBaseUrl:           SubscriptionUssBaseURL(conf.HostUrl),
 			NotifyForConstraints: &notifyForConstraint,
 		},
 		FlightType: request.FlightType,
