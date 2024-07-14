@@ -8,9 +8,15 @@ import (
 type StrategicDeconfliction interface {
 	Inject(request dss.PutOirRequest) (dss.OperationalIntent, error)
 	FetchOir(id string) (dss.OperationalIntent, error)
+	FetchVersion(id string) (Version)
 }
 
 type InterussDeconflictor struct {
+}
+
+type Version struct {
+	SystemId string   `json:"system_id"`
+	Version  string   `json:"version"`
 }
 
 func (d InterussDeconflictor) Inject(request dss.PutOirRequest) (dss.OperationalIntent, error) {
@@ -34,4 +40,9 @@ func (d InterussDeconflictor) FetchOir(id string) (dss.OperationalIntent, error)
 		return dss.OperationalIntent{}, err
 	}
 	return oir, err
+}
+
+
+func (d InterussDeconflictor) FetchVersion(id string) (Version) {
+		return Version{id,"1.0"}
 }
