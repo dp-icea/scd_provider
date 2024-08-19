@@ -10,11 +10,7 @@ require (
 )
 
 require (
-	github.com/ctessum/geom v0.2.12 // indirect
-	github.com/ctessum/polyclip-go v1.1.0 // indirect
 	github.com/golang/snappy v0.0.1 // indirect
-	github.com/gonum/floats v0.0.0-20181209220543-c233463c7e82 // indirect
-	github.com/gonum/internal v0.0.0-20181124074243-f884aa714029 // indirect
 	github.com/klauspost/compress v1.13.6 // indirect
 	github.com/montanaflynn/stats v0.0.0-20171201202039-1bf9dbcd8cbe // indirect
 	github.com/xdg-go/pbkdf2 v1.0.0 // indirect
@@ -24,5 +20,4 @@ require (
 	golang.org/x/crypto v0.17.0 // indirect
 	golang.org/x/sync v0.1.0 // indirect
 	golang.org/x/text v0.14.0 // indirect
-	gonum.org/v1/gonum v0.9.3 // indirect
 )
