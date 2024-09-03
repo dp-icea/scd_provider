@@ -232,6 +232,11 @@ func (c Client) GetConstraintDetails(reference ConstraintReference) (GetConstrai
 	}
 	defer resp.Body.Close()
 
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("Failed to get contraint details at url: %s", url)
+		return response, errors.New("failed to get constraint details")
+	}
+
 	respBody, err := io.ReadAll(resp.Body)
 
 	err = json.Unmarshal(respBody, &response)
@@ -257,6 +262,11 @@ func (c Client) GetOirDetails(reference OperationalIntentReference) (GetOperatio
 		return response, err
 	}
 	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		log.Printf("Failed to get oir details at url: %s", url)
+		return response, errors.New("failed to get oir details")
+	}
 
 	respBody, err := io.ReadAll(resp.Body)
 
