@@ -30,6 +30,8 @@ func (h HttpServer) Serve() {
 	http.HandleFunc("/injection", h.handleInjection)
 	http.HandleFunc("/uss/v1/operational_intents/{entityid}", h.handleFetchOir)
 	http.HandleFunc("/uss/v1/operational_intents/", h.handleNotification)
+	http.HandleFunc("/uss/v1/versions/{systemid}", h.handleFetchVersion)
+	http.HandleFunc("/uss/v1/log/", h.handleFetchLog)
 
 	log.Println("Starting server on port :" + h.conf.HostPort)
 	log.Fatal(http.ListenAndServe(":"+h.conf.HostPort, nil))
@@ -84,7 +86,7 @@ func (h HttpServer) handleFetchOir(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
 		return
 	}
-	if authorization == false {
+	if !authorization {
 		log.Print("Unauthorized")
 		http.Error(w, "Unauthorized", http.StatusUnauthorized)
 		return
@@ -118,6 +120,78 @@ func (h HttpServer) handleNotification(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	//TODO Update OIR Status
+}
+
+func (h HttpServer) handleFetchVersion(w http.ResponseWriter, r *http.Request) {
+	log.Println(*r)
+
+	if r.Method != http.MethodGet {
+		log.Print("Invalid request method: " + r.Method)
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	authorization, err := h.verifyAuthorization(r, scd.GetVersion)
+	if err != nil {
+		log.Print(err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	if !authorization {
+		log.Print("Unauthorized")
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	systemid := r.PathValue("systemid")
+	response := h.Deconflictor.FetchVersion(systemid)
+	w.Header().Set("Content-Type", "application/json")
+
+	err = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Print(err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	return
+}
+
+func (h HttpServer) handleFetchLog(w http.ResponseWriter, r *http.Request) {
+	log.Println(*r)
+
+	if r.Method != http.MethodGet {
+		log.Print("Invalid request method: " + r.Method)
+		http.Error(w, "Method Not Allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	authorization, err := h.verifyAuthorization(r, scd.GetVersion)
+	if err != nil {
+		log.Print(err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+	if !authorization {
+		log.Print("Unauthorized")
+		http.Error(w, "Unauthorized", http.StatusUnauthorized)
+		return
+	}
+
+	timestamp_start := r.FormValue("timestamp_start")
+	timestamp_end := r.FormValue("timestamp_end")
+
+	response := h.Deconflictor.FetchLog(timestamp_start, timestamp_end)
+	w.Header().Set("Content-Type", "application/json")
+
+	err = json.NewEncoder(w).Encode(response)
+	if err != nil {
+		log.Print(err.Error())
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		return
+	}
+
+	return
 }
 
 func (h HttpServer) verifyAuthorization(r *http.Request, scope scd.AuthScope) (bool, error) {

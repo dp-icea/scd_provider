@@ -16,6 +16,7 @@ type AuthScope string
 
 const (
 	StrategicCoordination AuthScope = "utm.strategic_coordination"
+	GetVersion  	      AuthScope = "interuss.versioning.read_system_versions"
 )
 
 func (jwt JwtTokenVerifier) Verify(token string, expectedScope AuthScope) (bool, error) {
