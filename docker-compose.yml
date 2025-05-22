@@ -1,0 +1,14 @@
+services:
+  scd_provider:
+    container_name: scd_provider
+    build:
+      context: .
+    restart: on-failure
+    logging:
+      driver: fluentd
+      options:
+        tag: scd-provider-api
+    ports:
+      - '9091:9091'
+    expose:
+      - '9091'
