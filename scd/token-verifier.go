@@ -1,6 +1,7 @@
 package scd
 
 import (
+	"io"
 	"log"
 	"net/http"
 	"scd_provider/config"
@@ -28,10 +29,20 @@ func (jwt JwtTokenVerifier) Verify(token string, expectedScope AuthScope) (bool,
 		log.Println(err)
 		return false, err
 	}
+	defer res.Body.Close()
+	
 	if res.StatusCode == http.StatusOK {
 		return true, nil
 	}
-	log.Println("Token verification failed with status code:", res.StatusCode)
-	log.Println("Token verification response:", res.Body)
+	
+	// Read the response body to log the actual content
+	body, err := io.ReadAll(res.Body)
+	if err != nil {
+		log.Println("Token verification failed with status code:", res.StatusCode)
+		log.Println("Failed to read response body:", err)
+	} else {
+		log.Println("Token verification failed with status code:", res.StatusCode)
+		log.Println("Token verification response:", string(body))
+	}
 	return false, nil
 }
